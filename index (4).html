@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyFlix • Video Grid</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Website sederhana bergaya Netflix. Klik poster untuk menonton videonya." />
+
+  <meta name="monetag" content="f17d0998f016f0c02396151ffde130a1">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="MyFlix - Nonton Film Sederhana" />
+  <meta property="og:description" content="Website streaming sederhana bergaya Netflix.@biasaL4" />
+  <meta property="og:image" content="https://kasihterma-star.github.io/myflix/netflix_M.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://myflixnibosss.my.id/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="netflix_M.png" sizes="32x32">
+
+  <style>
+    .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .poster::after{content:"";position:absolute;inset:0;transition:opacity .2s;opacity:0;background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0))}
+    .poster:hover::after{opacity:.7}
+    @keyframes marquee { 0%{transform:translateX(100%);} 100%{transform:translateX(-100%);} }
+    .animate-marquee { display:inline-block; animation:marquee 12s linear infinite; }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9G24NHS386"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9G24NHS386');
+  </script>
+</head>
+
+<body class="bg-neutral-950 text-white">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-neutral-950/80 backdrop-blur border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <svg width="28" height="28" viewBox="0 0 512 512" fill="currentColor" class="text-red-600 drop-shadow">
+          <path d="M80 80h80l96 240 96-240h80v352h-80V232l-96 240-96-240v200H80z"/>
+        </svg>
+        <span class="font-bold tracking-wide">MyFlix</span>
+      </div>
+      <div class="hidden sm:block text-sm text-red-300">
+        🎉 Selamat datang di MyFlix! Kecepatan loading tergantung perangkat & jaringan.
+      </div>
+      <div class="ml-auto w-full max-w-md">
+        <label class="relative block">
+          <input id="searchBox" type="search" placeholder="Cari judul atau kategori…"
+            class="w-full bg-neutral-900/80 border border-white/10 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-red-600/60" />
+          <svg class="absolute left-3 top-2.5" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+          </svg>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tulisan Berjalan -->
+  <div class="overflow-hidden whitespace-nowrap bg-red-600 text-white py-2">
+    <div class="animate-marquee inline-block px-4 font-semibold">
+      🎉 Selamat datang di MyFlix — Nonton film favoritmu gratis 🎬 |
+      Update film terbaru setiap minggu! 🍿 Kecepatan loading tergantung perangkat & jaringan 🙏🏻.
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4">
+    <!-- Hero -->
+    <section id="hero" class="relative mt-4 mb-6 overflow-hidden rounded-2xl min-h-[240px] sm:min-h-[320px] md:min-h-[420px]">
+      <div id="heroBg" class="absolute inset-0 bg-cover bg-center transition-[background-image] duration-700 ease-out"></div>
+      <div class="relative z-10 p-6 sm:p-10 md:p-12 max-w-2xl">
+        <h1 id="heroTitle" class="text-2xl sm:text-3xl md:text-5xl font-bold drop-shadow">Tonton Apa Saja</h1>
+        <p id="heroDesc" class="mt-2 text-white/80">Klik poster di bawah untuk memutar video.</p>
+        <div class="mt-4 flex gap-3">
+          <a id="heroPlay" href="#" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-xl px-4 py-2 font-medium shadow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            Putar
+          </a>
+          <a id="heroMore" href="#grid"
+            class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 rounded-xl px-4 py-2 font-medium">Jelajahi</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kategori -->
+    <div class="mb-3 flex flex-wrap gap-2" id="chipBar"></div>
+    <div id="yearFilter" class="flex flex-wrap gap-2 mt-2 hidden"></div>
+
+    <!-- Grid Poster -->
+    <section>
+      <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4"></div>
+    </section>
+
+    <footer class="py-10 text-center text-white/50 text-sm">
+      <div class="flex items-center justify-center gap-3">
+        <span>© <span id="year"></span> MyFlix (L4) — request film/kendala via IG</span>
+        <a href="https://www.instagram.com/my.flix_?" target="_blank" rel="noopener"
+          class="inline-flex items-center text-white/60 hover:text-pink-500" aria-label="Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Modal Pilih Server (scrollable) -->
+  <div id="serverModal" class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative mx-auto mt-24 w-11/12 max-w-md rounded-2xl bg-neutral-900 border border-white/10 shadow-xl max-h-[80vh] overflow-hidden flex flex-col">
+      <div class="p-4 border-b border-white/10 flex items-center justify-between">
+        <h3 id="serverModalTitle" class="text-lg font-semibold">Pilih Server</h3>
+        <button id="serverModalClose" class="rounded-lg p-2 hover:bg-white/5">✕</button>
+      </div>
+      <div id="serverList" class="p-4 space-y-2 max-h-80 overflow-y-auto"></div>
+      <div class="p-4 pt-0 text-sm text-white/60">Tips: jika ada kendala hubungi kami di Instagram melalui DM.</div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       DATA VIDEO (DITAMBAH: “Boneka”)
+       - Jika “urls” berisi >1, muncul modal pilihan server/episode.
+       - Entri link kosong akan di-skip (tidak ditampilkan sebagai tombol).
+       - Jika hanya ada 1 link valid, tombol Putar langsung menuju link itu.
+    ==========================*/
+    const videos = [
+      /* --- TAMBAHAN: BONEKA --- */
+      {
+        title: "situs/ website myflix alternatif" ,
+        year: 2025,
+        urls: [
+           // taruh file ini di /DATA/nginx/html/videos/
+          { name: "Episode 1 (Link)",  link: "https://kasihterma-star.github.io/myflix/" }   // ganti dengan link kamu; kalau belum ada, kosongkan atau hapus entri ini
+        ],
+        thumb: "123.png",                // sediakan poster ini di root, atau ganti nama file sesuai yang ada
+        category: "macam macam film"
+      },
+
+    
+     
+    ];
+
+    /* ===== Modal Server (revisi: skip link kosong) ===== */
+    const serverModal = document.getElementById('serverModal');
+    const serverList  = document.getElementById('serverList');
+    const serverTitle = document.getElementById('serverModalTitle');
+    const serverClose = document.getElementById('serverModalClose');
+
+    function validUrls(item){
+      return (item.urls || []).filter(u => u.link && String(u.link).trim() !== "");
+    }
+
+    function openServerModal(item) {
+      const choices = validUrls(item);
+      serverTitle.textContent = `Pilih Server/Episode — ${item.title}`;
+      serverList.innerHTML = '';
+      choices.forEach((u, idx) => {
+        const btn = document.createElement('a');
+        btn.href = u.link; btn.target = '_blank';
+        btn.className = 'block w-full rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-4 py-3';
+        btn.textContent = u.name || `Server ${idx+1}`;
+        serverList.appendChild(btn);
+      });
+      serverModal.classList.remove('hidden');
+    }
+    function closeServerModal(){ serverModal.classList.add('hidden'); }
+    serverClose.addEventListener('click', closeServerModal);
+    serverModal.addEventListener('click', e => { if(e.target===serverModal) closeServerModal(); });
+    window.addEventListener('keydown', e => { if(e.key==='Escape') closeServerModal(); });
+
+    /* ===== Hero ===== */
+    const heroBg = document.getElementById('heroBg');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroDesc = document.getElementById('heroDesc');
+    const heroPlay = document.getElementById('heroPlay');
+    let heroIndex = 0;
+    const heroPool = videos.slice(0,6);
+
+    function setHero(item){
+      heroBg.style.backgroundImage = `linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.75)),url('${item.thumb}')`;
+      heroTitle.textContent = item.title + (item.year ? ` (${item.year})` : "");
+      heroDesc.textContent = "Kategori: " + (item.category || "—");
+      heroPlay.onclick = (e) => {
+        e.preventDefault();
+        const choices = validUrls(item);
+        if(choices.length <= 1){
+          if(choices[0]) window.open(choices[0].link,'_blank');
+        } else {
+          openServerModal(item);
+        }
+      };
+    }
+    function nextHero(){ heroIndex=(heroIndex+1)%heroPool.length; setHero(heroPool[heroIndex]); }
+    setHero(heroPool[heroIndex]); setInterval(nextHero,5000);
+
+    /* ===== Filter/Kategori & Tahun ===== */
+    const grid = document.getElementById('grid');
+    const searchBox = document.getElementById('searchBox');
+    const chipBar = document.getElementById('chipBar');
+    const categories = ["Semua", ...Array.from(new Set(videos.flatMap(v=>v.category.split(',').map(c=>c.trim()))))];
+    let activeCategory = 'Semua';
+
+    function chipClass(isActive){
+      const base = 'px-3 py-1.5 rounded-full text-sm border transition-colors active:scale-[.98]';
+      const inactive = 'border-white/10 bg-white/5 text-white/80 hover:bg-white/10';
+      const active   = 'bg-red-600 border-red-600 text-white';
+      return base+' '+(isActive?active:inactive);
+    }
+
+    function renderChips(){
+      chipBar.innerHTML='';
+      categories.forEach(cat=>{
+        const btn=document.createElement('button');
+        btn.textContent=cat;
+        btn.className=chipClass(String(cat)===String(activeCategory));
+        btn.addEventListener('click',()=>{ activeCategory=cat; renderChips(); render(); });
+        chipBar.appendChild(btn);
+      });
+      const yearBtn=document.createElement('button');
+      yearBtn.textContent='Tahun ⏷'; yearBtn.className=chipClass(false);
+      yearBtn.addEventListener('click',toggleYears);
+      chipBar.appendChild(yearBtn);
+    }
+
+    function toggleYears(){
+      const yearDiv=document.getElementById('yearFilter');
+      yearDiv.classList.toggle('hidden'); yearDiv.innerHTML='';
+      const years=[...new Set(videos.map(v=>v.year))].sort();
+      years.forEach(y=>{
+        const b=document.createElement('button');
+        b.textContent=y; b.className=chipClass(String(y)===String(activeCategory));
+        b.addEventListener('click',()=>{ activeCategory=y; renderChips(); render(); toggleYears(); });
+        yearDiv.appendChild(b);
+      });
+    }
+
+    /* ===== Kualitas (badge + toggle) ===== */
+    const QUALITY_ORDER = ["HD","SD","CAM"];
+    function nextQuality(q){ const i = QUALITY_ORDER.indexOf(q); return QUALITY_ORDER[(i+1) % QUALITY_ORDER.length] || "HD"; }
+    function qualityColor(q){
+      if(q==="HD") return "bg-green-600";
+      if(q==="SD") return "bg-yellow-500";
+      if(q==="CAM") return "bg-red-600";
+      return "bg-gray-600";
+    }
+    const qualityState = videos.map(v => (v.quality || "HD"));
+
+    /* ===== Grid ===== */
+    function posterCard(item, idx){
+      const card=document.createElement('div');
+      card.className='group relative rounded-2xl overflow-hidden block cursor-pointer';
+      card.innerHTML=`
+        <img src="${item.thumb}" alt="${item.title}" class="w-full aspect-[2/3] object-cover">
+        <div class="poster absolute inset-0"></div>
+        <div class="absolute left-2 top-2 text-[11px] bg-black/70 rounded-md px-2 py-1">${item.category} • ${item.year}</div>
+        <button type="button" aria-label="Ganti kualitas"
+          class="absolute right-2 top-2 text-[11px] ${qualityColor(qualityState[idx])} text-white rounded-md px-2 py-1 font-bold shadow">
+          ${qualityState[idx]}
+        </button>
+        <div class="absolute inset-x-0 bottom-0 p-3 flex items-center gap-2 translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition">
+          <div class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-600 shadow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="font-medium">Putar</div>
+        </div>`;
+
+      const badgeBtn = card.querySelector('button[aria-label="Ganti kualitas"]');
+      badgeBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        qualityState[idx] = nextQuality(qualityState[idx]);
+        badgeBtn.textContent = qualityState[idx];
+        badgeBtn.className = `absolute right-2 top-2 text-[11px] ${qualityColor(qualityState[idx])} text-white rounded-md px-2 py-1 font-bold shadow`;
+      });
+
+      card.addEventListener('click',()=>{
+        const choices = validUrls(item);
+        if(choices.length <= 1){
+          if(choices[0]) window.open(choices[0].link,'_blank');
+        } else {
+          openServerModal(item);
+        }
+      });
+
+      const title=document.createElement('div');
+      title.className='mt-2 text-sm font-medium line-clamp-2 text-white/90';
+      title.textContent=item.title+(item.year?` (${item.year})`:"");
+      const wrapper=document.createElement('div'); wrapper.append(card,title);
+      return wrapper;
+    }
+
+    function render(){
+      const q=(searchBox.value||'').toLowerCase().trim();
+      let list=videos.map((v, i)=>({ ...v, __idx: i }));
+      if(activeCategory!=='Semua'){
+        list=list.filter(v=>v.category.split(',').map(c=>c.trim()).includes(activeCategory)||String(v.year)===String(activeCategory));
+      }
+      if(q) list=list.filter(v=>(v.title+' '+v.category).toLowerCase().includes(q));
+      const grid=document.getElementById('grid');
+      grid.innerHTML='';
+      list.forEach(item=>grid.appendChild(posterCard(item, item.__idx)));
+    }
+
+    document.getElementById('year').textContent=new Date().getFullYear();
+    renderChips(); render();
+    searchBox.addEventListener('input',render);
+  </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"version":"2024.11.0","token":"0ba7f2b9ef714a26aa4e7962f7307ac4","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    crossorigin="anonymous"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"0ba7f2b9ef714a26aa4e7962f7307ac4","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
